@@ -1,0 +1,145 @@
+Customer Churn Rate Prediction
+-This project helps us predict whether or not a customer is going to leave a 
+service or not. In this project, we will the customer churn rate  for bank
+customers.
+
+Part 1: Data preprocessing
+-The dataset link is provided from where you can download the dataset. Now,
+we import the required libraries for this project.numpy to work with the
+arrays. pandas to work with the dataset. matplotlib.pyplot and seaborn are the
+two data visualization libraries. Using the pandas library, we import the 
+dataset in our project and store it in a variable called dataset.
+-In Data Exploration, we basically explore and get to know more about the 
+data. dataset.head gives the first few rows of the dataset. dataset.shape gives
+the number of observations/rows as well as the number of columns. dataset.info()
+gives us the information about the dataset such as the datatype of each column, 
+no. of enteries and no. of non-null values. Data usually in the form of a 
+string have a datatype of object. Now, we select all the columns who have a 
+datatype of 'object', and we see there are three such columns.We also select
+all the columns who have a datatype of 'int64','float64', and we see there are
+eleven such columns. Stastical summary gives an entire summary of the dataset, 
+and gives us values such as count, mean, std, min, 25%, 50%, 75% and max of 
+each column in the dataset.
+-We deal with missing data as null values create a problem with our models. 
+dataset.isnull().values.any() checks for null values and returns false if there
+are no null values. dataset.isnull().values.sum() returns the number of null 
+values present in the dataset.
+-First, we choose the categorical columns which are columns with datatype 
+object and drop them out of the dataset. You can see the new dataset by writing 
+dataset.head(). dataset['Geography'].unique() tells us about the different 
+categories present in Geography. dataset.groupby('Geography').mean() takes each 
+category and finds the mean of that category in that column.We observe that 
+averagebalance for the people in Germany is higher than Spain and France. Does 
+this same for Gender.dataset = pd.get_dummies(data=dataset, drop_first=True) 
+performs a hot encoding on the new dataset. Basically, first, it drops the first row, and moves 
+to the next row, sees the data present in the categorical columns and make a 
+new column.If that data present in the categorical column was also present in 
+the first row, we ignore that data.
+-A plot is being made which tells the no. of customers who have exited the 
+bank. 0 means staying and 1 means exited.(dataset.Exited == 0).sum() tells us
+the exact no. of customers who stayed with the bank.
+-We drop the Exited column from the dataset, and make a new dataset called
+dataset_2. Plot the correlation between exited and every column of the dataset.
+The arguments given as input are: Figsize which is the height and width of the 
+plot, rot=45 means columns name will be shown at 45degrees and grid=True means 
+there will be a grid for the plot meaning there will be numerous cells. We also 
+draw the heatmap which gives the actual value of the correlation between 
+exited and other columns. annot=True shows the numerical values, without it we
+just get the variation of colour on the grid.
+-y holds the value of Exited and x holds the value of the columns except exited.
+We import train_test_split which helps us get the testing and training models.
+test_size = 0.2 means that the testing models receives 20% of the rows of the
+dataset. random_state=0 means everytime we run this command we get the same 
+training and testing models.
+-Using standard scaler, we modify the values of the dataset to a new value 
+which is z = (x - u) / s, u is previous mean of the training sample and s is
+the previous standard deviation and x is previous sample value.fit_transform 
+modified the values of x_train and used the previous mean and standard devaition 
+and gave it to transform. transform uses it and transforms the x_test.
+
+
+Part 2: Building the model
+-Different machine learning classification models are being tested to find the perfect solution to the problem.
+These models are logistic regression, random forest classifier and 
+XGBoostClassifier. Depending upon the performance, we finalize and choose a 
+model.
+
+-Import LogisticRegression from sklearn.linear_model. LogisticRegression 
+predicts the probability of an event occuring based on a given set of 
+independent variables. Initially, we train the model by giving the input values 
+x_train and y_train.Now, since the model is trained we test the model by giving
+y_test as the input to give out the output y_pred. We import the classes 
+acccuracy_score, f1_score, precision_score and recall_score to test the 
+accuracy of the results. Closer the value to 1 means more precise/accurate/
+better, opposite when close to 0. Confusion matrix also evaluates the accuracy
+of the model by giving the values of true negative, false negative, true 
+positives and false positives.
+-Import cross_val_score to cross validate your results. We take in the 
+classifier_lr, x_train, y_train as inputs along with cv=10 which means we are 
+going to break the dataset into 10 subsets and perform training on 9 of them 
+and use the 10th one for evaluation of the training model. The evaluation can 
+be seen by calculating the accuracy and standard deviation of the accuracies
+variable which holds the cross_val_score function.
+
+-Import RandomForestClassifier from sklearn.ensemble. RandomForestClassifier is
+a ML algorithm used in regression problems.It builds decision trees on different
+samples and takes the majority vote and average for classification. Works the
+same way as Logistic regression. We make a variable called classifier_rf and do
+the same steps as Logistic regression. We store the results of this model in 
+a variable called model_results and append it to the results variable. It is 
+seen that RandomForestClassifier is more accurate/precise and better than 
+LogisticRegression.Similarly, we can cross validate our results.
+
+-XGBoostClassifier is an implementation of gradient boosted decision trees 
+designed to increase the speed and performance of machine learning based 
+models. Documentation can be seen at https://xgboost.readthedocs.io/en/latest/ .
+We make a variable called classifier_xgb which takes in the default values
+and do the same steps as Logistic regression. We store the results of this model
+in a variable called model_results and append it to the results variable. It is 
+seen that XGBoostClassifiers more accurate LogisticRegression and 
+RandomForestClassifier.Similarly, we can cross validate our results, and we 
+observe that XGBoostClassifier has the best accuracy amongst the three.So, 
+we finally choose XGBoostClassifier as our model.
+
+
+Part 3:Randomized search to find the best parameters for XGBoostClassifier
+-We are trying the best parameters to increase the performance of this model.
+Hyperparameters are those variables which control the training process, whereas
+parameters help in the decision making process.You can see the Hyperparameters
+for XGBoostClassifier in the argument list of XGBoostClassifier. We import 
+RandomizedSearchCV to help out the process. GridCV does not try out all the 
+parameter values whereas RandomizedSearchCV tries out all of them. Out of the 
+several Hyperparameters present, we will choose only five to be tuned which are:
+learning_rate, max_depth, min_child_weight, gamma and colsample_bytree. 
+Different values are given to them to check out the performance of the model.
+-We will give various values to each of these five Hyperparameters.
+RandomizedSearchCV will try out all possible combinates of values and now 
+gives us back the best parameters. We make a variable called randomized_search
+which calls the RandomizedSearchCV function and takes in arguments such as 
+classifier_xgb, five paramters in param_distribution, n_iters=5 because of five
+parameters, n_jobs=-1 means the parameters can exploit the all the 
+processors present in the local computer, scoring takes the any performance
+value of the model, cv=5 meaning break the subset into five different sets and
+verbose = 3 controls the verbocity.Now, we train this model by giving x_train 
+and y_train values.
+-randomized_search.best_estimator_ tells us the values of Hyperparameters to 
+use to get the best performance. randomized_search.best_params_ tells only 
+about the values to be used in the param_distribution in order to achieve the
+max performance. If we take the parameter values from best_estimator_ and put 
+it in cross validation, the accuracy will be the same value as that of 
+randomized_search.best_score_.
+
+Part 4: Final model
+-We take the values of the parameters and put it in XGBoostClassifier 
+arguments. Find out the results and append it. Also find out the Confusion 
+matrix and the cross validation.
+
+Part 5: Predicting a single observation
+-We make an observation with 10 elements. sc.transform based on past 
+performaces takes the value of mean and standard deviation from fit_transform
+and changes each sample value of each column. We also know that sc.transform 
+only works on the dataset without exited.So, the observation made does not have
+the exited column. Then, we call the variable classifier from our final model 
+which makes our prediction of whether the customer has exited or not by taking 
+in the transformed value of the observation.
+
