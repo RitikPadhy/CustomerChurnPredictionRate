@@ -1,7 +1,7 @@
 Customer Churn Rate Prediction
 -This project helps us predict whether or not a customer is going to leave a 
-service or not. In this project, we will the customer churn rate  for bank
-customers.
+service or not. In this project, we will the calculate the customer churn rate
+for bank customers.
 
 Part 1: Data preprocessing
 -The dataset link is provided from where you can download the dataset. Now,
@@ -30,11 +30,11 @@ dataset.head(). dataset['Geography'].unique() tells us about the different
 categories present in Geography. dataset.groupby('Geography').mean() takes each 
 category and finds the mean of that category in that column.We observe that 
 averagebalance for the people in Germany is higher than Spain and France. Does 
-this same for Gender.dataset = pd.get_dummies(data=dataset, drop_first=True) 
-performs a hot encoding on the new dataset. Basically, first, it drops the first row, and moves 
-to the next row, sees the data present in the categorical columns and make a 
-new column.If that data present in the categorical column was also present in 
-the first row, we ignore that data.
+this same for Gender. dataset = pd.get_dummies(data=dataset, drop_first=True) 
+performs a hot encoding on the new dataset. Basically, first, it drops the 
+first row, and moves to the next row, sees the data present in the categorical
+columns and make a new column.If that data present in the categorical column 
+was also present in the first row, we ignore that data.
 -A plot is being made which tells the no. of customers who have exited the 
 bank. 0 means staying and 1 means exited.(dataset.Exited == 0).sum() tells us
 the exact no. of customers who stayed with the bank.
